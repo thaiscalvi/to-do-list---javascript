@@ -106,3 +106,37 @@ input[type="text"]:focus {
 .status-bolinha.finalizada {
     background-color: green;
 }
+
+/* botão deletar*/
+
+.acoes-tarefa {
+  display: flex;
+  align-items: center; /* Isso já ajuda */
+  justify-content: flex-end;
+  gap: 12px;
+  height: 100%;
+}
+
+.botao-deletar {
+  background-color: transparent;
+  border: none;
+  color: #60041A;
+  font-size: 18px; /* aumentei um pouco para melhorar a proporção */
+  cursor: pointer;
+  transition: color 0.3s;
+  display: flex;
+  align-items: center; /* isso garante que o ícone fique no centro vertical */
+  justify-content: center;
+  padding: 0;
+  position: relative;
+  top: -5px;
+}
+
+.botao-deletar:hover {
+  color: #A34743;
+}
+
+.texto-tarefa.riscado {
+  text-decoration: line-through;
+  color: #888;
+}

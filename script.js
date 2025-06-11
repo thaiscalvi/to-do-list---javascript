@@ -9,25 +9,47 @@ function adicionarTarefa() {
     return;
   }
 
-  // Criar elementos
+  // Criar <li>
   let novaTarefa = document.createElement("li");
   novaTarefa.classList.add("tarefa-item");
 
+  // Criar texto da tarefa
   let textoTarefa = document.createElement("span");
   textoTarefa.classList.add("texto-tarefa");
   textoTarefa.textContent = tarefa;
 
+  // Criar bolinha
   let bolinha = document.createElement("span");
   bolinha.classList.add("status-bolinha");
 
-  // Alterna status ao clicar
-bolinha.addEventListener("click", () => {
-  bolinha.classList.toggle("finalizada");
+  bolinha.addEventListener("click", () => {
+    bolinha.classList.toggle("finalizada");
+    textoTarefa.classList.toggle("riscado");
+  });
+
+  // Criar botão de deletar
+  let botaoDeletar = document.createElement("button");
+  botaoDeletar.classList.add("botao-deletar");
+  botaoDeletar.innerHTML = "🗑️";
+
+  botaoDeletar.addEventListener("click", () => {
+    novaTarefa.remove();
+  });
+
+  botaoDeletar.addEventListener("click", () => {
+  novaTarefa.remove();
+  mensagemElemento.textContent = "Tarefa excluída com sucesso!";
 });
 
-  // Adicionar ao item
+  // Criar div para bolinha + deletar
+  let acoes = document.createElement("div");
+  acoes.classList.add("acoes-tarefa");
+  acoes.appendChild(bolinha);
+  acoes.appendChild(botaoDeletar);
+
+  // Montar tarefa
   novaTarefa.appendChild(textoTarefa);
-  novaTarefa.appendChild(bolinha);
+  novaTarefa.appendChild(acoes);
   listaTarefas.appendChild(novaTarefa);
 
   mensagemElemento.textContent = "Tarefa adicionada com sucesso!";
