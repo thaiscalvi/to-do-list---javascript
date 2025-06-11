@@ -1,10 +1,12 @@
-function adicionarTarefa() {
+function adicionarTarefa(tarefa = null) {
   let inputTarefa = document.getElementById("inputTarefa");
-  let tarefa = inputTarefa.value.trim();
   let mensagemElemento = document.getElementById("mensagem");
   let listaTarefas = document.getElementById("listaTarefas");
 
-  if (tarefa === "") {
+  // Se for tarefa vinda do localStorage, usa ela; senão pega do input
+  let nomeTarefa = tarefa || inputTarefa.value.trim();
+
+  if (nomeTarefa === "") {
     mensagemElemento.textContent = "Não há tarefas. Favor adicionar uma tarefa.";
     return;
   }
@@ -13,45 +15,57 @@ function adicionarTarefa() {
   let novaTarefa = document.createElement("li");
   novaTarefa.classList.add("tarefa-item");
 
-  // Criar texto da tarefa
+  // Texto da tarefa
   let textoTarefa = document.createElement("span");
   textoTarefa.classList.add("texto-tarefa");
-  textoTarefa.textContent = tarefa;
+  textoTarefa.textContent = nomeTarefa;
 
-  // Criar bolinha
+  // Bolinha de status
   let bolinha = document.createElement("span");
   bolinha.classList.add("status-bolinha");
-
   bolinha.addEventListener("click", () => {
     bolinha.classList.toggle("finalizada");
     textoTarefa.classList.toggle("riscado");
   });
 
-  // Criar botão de deletar
+  // Botão de deletar
   let botaoDeletar = document.createElement("button");
   botaoDeletar.classList.add("botao-deletar");
   botaoDeletar.innerHTML = "🗑️";
-
   botaoDeletar.addEventListener("click", () => {
     novaTarefa.remove();
+    mensagemElemento.textContent = "Tarefa excluída com sucesso!";
+
+    // Remove do localStorage
+    let tarefasSalvas = JSON.parse(localStorage.getItem("tarefas")) || [];
+    let novasTarefas = tarefasSalvas.filter(t => t !== nomeTarefa);
+    localStorage.setItem("tarefas", JSON.stringify(novasTarefas));
   });
 
-  botaoDeletar.addEventListener("click", () => {
-  novaTarefa.remove();
-  mensagemElemento.textContent = "Tarefa excluída com sucesso!";
-});
-
-  // Criar div para bolinha + deletar
+  // Agrupando bolinha + lixeira
   let acoes = document.createElement("div");
   acoes.classList.add("acoes-tarefa");
   acoes.appendChild(bolinha);
   acoes.appendChild(botaoDeletar);
 
-  // Montar tarefa
   novaTarefa.appendChild(textoTarefa);
   novaTarefa.appendChild(acoes);
   listaTarefas.appendChild(novaTarefa);
 
-  mensagemElemento.textContent = "Tarefa adicionada com sucesso!";
-  inputTarefa.value = "";
+  // Salva no localStorage se foi digitada pelo usuário
+  if (!tarefa) {
+    mensagemElemento.textContent = "Tarefa adicionada com sucesso!";
+    let tarefasSalvas = JSON.parse(localStorage.getItem("tarefas")) || [];
+    tarefasSalvas.push(nomeTarefa);
+    localStorage.setItem("tarefas", JSON.stringify(tarefasSalvas));
+    inputTarefa.value = "";
+  }
 }
+
+function carregarTarefasSalvas() {
+  let tarefasSalvas = JSON.parse(localStorage.getItem("tarefas")) || [];
+  tarefasSalvas.forEach(tarefa => adicionarTarefa(tarefa));
+}
+
+// Carrega as tarefas assim que a página é aberta
+carregarTarefasSalvas();
